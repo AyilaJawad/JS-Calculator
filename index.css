@@ -1,31 +1,27 @@
-*{
-    padding: 0;
-    margin: 0;
-    background-origin: padding-box;
-    font-family: 'Poppins', sans-serif;
+* {
+  padding: 0;
+  margin: 0;
+  background-origin: padding-box;
+  font-family: 'Poppins', sans-serif;
 }
 
-html{
-    font-size: 16px;
-    background-color: #636363;
+html {
+  font-size: 16px;
+  background-color: #fcfcfc;
 }
 
-.calculator{
-    position: absolute;
-
-    top: 50%;
-    left: 50%;
-
-    transform: translate(-50%, -50%);
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 
-.calc-container{
-    background-color: #1d1d1d;
-
-    width: 600px;
-    height: auto;
-
-    border-radius: 0 0 30px 30px;
+.calc-container {
+  background-color: #afafaf;
+  width: 600px;
+  height: auto;
+  border-radius: 20px 20px 30px 30px;
 }
 
 .output{
@@ -36,7 +32,7 @@ html{
     width: 600px;
     height: 70px;
 
-    color: #878787;
+    color: #000000;
 
     font-size: 1.9em;
     font-weight: bold;
@@ -114,17 +110,17 @@ html{
 
 .row #calculate{
     color: #FFF;
-    background-color: #46e0bc;
+    background-color: #8fb6e6;
     width : 121px;
-    border-radius: 50px;
+    border-radius: 10px;
 }
 .row #delete{
     color: #FFF;
-    background-color: #e05046;
+    background-color: #e7746c;
 }
 
 #division, #multiplication, #subtraction, #addition {
-    color: #18b893;
+    color:  #6aa3e9;
 }
 
 .input button span{

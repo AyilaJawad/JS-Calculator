@@ -1,3 +1,5 @@
+i have made a calculator using JS, HTML, & css
+this is my .js file
 
 
 
@@ -11,7 +13,6 @@ const output_result_element = document.querySelector('.result .value');
 // saome variables to be used
 const OPERATION = ["+", "-", "*", "/"];
 const POWER = "POWER(", FACTORIAL = "FACTORIAL";
-
 let data = {
     operation: [],
     formula: []
@@ -457,48 +458,6 @@ input_element.addEventListener("click", event =>{
     })
 })
 
-// Keyboard event listener
-document.addEventListener("keydown", (event) => {
-    const key = event.key;
-    
-    // Numbers and operators
-    if (/[0-9+\-*/.^()%]/.test(key)) {
-      handleButtonPress(key);
-    }
-    
-    // Enter key
-    if (key === "Enter") {
-      calculateResult();
-    }
-    
-    // Backspace key
-    if (key === "Backspace") {
-      handleDelete();
-    }
-  });
-  
-  // Function to handle button press
-  function handleButtonPress(key) {
-    const button = calculator_buttons.find((btn) => btn.symbol === key);
-    if (button) {
-      calculator(button);
-    }
-  }
-  
-  // Function to handle delete key
-  function handleDelete() {
-    const deleteButton = calculator_buttons.find((btn) => btn.name === "delete");
-    calculator(deleteButton);
-  }
-  
-  // Function to calculate the result
-  function calculateResult() {
-    const calculateButton = calculator_buttons.find((btn) => btn.name === "calculate");
-    calculator(calculateButton);
-  }
-  
-
-
 // calculator
 function calculator(button){// console.log(button)
     if(button.type == "operator"){
@@ -628,6 +587,7 @@ function calculator(button){// console.log(button)
 
     updateOutputOperation( data.operation.join (''));
 }
+
 
 //factorial number getter
 // factorial number getter
@@ -834,3 +794,180 @@ function inv_trigo(callback, value){ //Inverse trignometric functions
     }
     return angle;
 }
+
+
+and this is its html
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JS Calculator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <div class="container">
+        <div class="calc-container">
+            <div class="output">
+                <div class="operation">
+                    <div class="value"></div>
+                </div>
+                <div class="result">
+                    <div class="value">0</div>
+                </div>
+            </div>
+            <div class="input"></div>
+        </div>
+    </div>
+
+    <script src="calculator.js"></script>
+</body>
+</html>
+
+and this is its css
+* {
+  padding: 0;
+  margin: 0;
+  background-origin: padding-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+html {
+  font-size: 16px;
+  background-color: #fcfcfc;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.calc-container {
+  background-color: #afafaf;
+  width: 600px;
+  height: auto;
+  border-radius: 20px 20px 30px 30px;
+}
+
+.output{
+    width: 100%;;
+}   
+
+.operation{
+    width: 600px;
+    height: 70px;
+
+    color: #000000;
+
+    font-size: 1.9em;
+    font-weight: bold;
+
+    position: relative;
+    overflow: hidden;
+}
+.operation .value{
+    position: absolute;
+
+    bottom: 5px;
+    right : 10px;
+    
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.result{
+    width: 600px;
+    height: 140px;
+
+    color: #FFF;
+
+    font-size: 2.6em;
+    font-weight: bold;
+    
+    overflow: hidden;
+    position: relative;
+}
+
+.result .value{
+    position: absolute;
+
+    top: 50%;
+    transform: translateY(-50%);
+    right : 10px;
+    
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+
+.input{
+    background-color: #FFF;
+
+    border-radius: 0 0 25px 25px;
+    border: 1px solid #1d1d1d;
+    height: 340px;
+}
+
+.row {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.row button{
+    width: 50px;
+    height: 50px;
+
+    font-size: 1.5em;
+
+    border: none;
+    border-radius: 50%;
+    background-color: transparent;
+
+    margin : 8px;
+
+    cursor: pointer;
+}
+
+.row button:hover{
+    font-weight: bold;
+}
+
+.row #calculate{
+    color: #FFF;
+    background-color: #8fb6e6;
+    width : 121px;
+    border-radius: 10px;
+}
+.row #delete{
+    color: #FFF;
+    background-color: #e7746c;
+}
+
+#division, #multiplication, #subtraction, #addition {
+    color:  #6aa3e9;
+}
+
+.input button span{
+    font-size: 0.6em;
+    position: absolute;
+}
+
+.active-angle{
+    background-color: #1d1d1d !important;
+    color: #FFF !important;
+    border-radius: 10px !important;
+}
+
+
+rightnow my calculator only works if the user clicks on the buttons displayed on the screen
+and hence doesnot take any input from keyboard to write the expression
+
+please hekp me modify my code, so that user can give same inputs using keyboard buttons as well
+and so if user hits enter button then it should calculate the answer and dsplay the result on screen
