@@ -17,6 +17,8 @@ let data = {
     formula: []
 }
 
+let history = [];
+
 // CALCULATOR BUTTONS
 let calculator_buttons = [
     {
@@ -202,236 +204,30 @@ let calculator_buttons = [
         formula : FACTORIAL,
         type : "math_function"
     }
-
-    // {
-    //     name : "rad",
-    //     symbol : "Rad",
-    //     formula : false,
-    //     type : "key"
-    // },
-    // {
-    //     name : "deg",
-    //     symbol : "Deg",
-    //     formula : false,
-    //     type : "key"
-    // },
-    // {
-    //     name : "square-root",
-    //     symbol : "√",
-    //     formula : "Math.sqrt",
-    //     type : "math_function"
-    // },
-    // {
-    //     name : "square",
-    //     symbol : "x²",
-    //     formula : POWER,
-    //     type : "math_function"
-    // },
-    // {
-    //     name : "open-parenthesis",
-    //     symbol : "(",
-    //     formula : "(",
-    //     type : "number"
-    // },
-    // {
-    //     name : "close-parenthesis",
-    //     symbol : ")",
-    //     formula : ")",
-    //     type : "number"
-    // },
-    // {
-    //     name : "clear",
-    //     symbol : "C",
-    //     formula : false,
-    //     type : "key"
-    // },
-    // {
-    //     name : "delete",
-    //     symbol : "⌫",
-    //     formula : false,
-    //     type : "key"
-    // },
-    // {
-    //     name : "pi",
-    //     symbol : "π",
-    //     formula : "Math.PI",
-    //     type : "number"
-    // },
-    // {
-    //     name : "cos",
-    //     symbol : "cos",
-    //     formula : "trigo(Math.cos,",
-    //     type : "trigo_function"
-    // },{
-    //     name : "sin",
-    //     symbol : "sin",
-    //     formula : "trigo(Math.sin,",
-    //     type : "trigo_function"
-    // },{
-    //     name : "tan",
-    //     symbol : "tan",
-    //     formula : "trigo(Math.tan,",
-    //     type : "trigo_function"
-    // },{
-    //     name : "7",
-    //     symbol : 7,
-    //     formula : 7,
-    //     type : "number"
-    // },{
-    //     name : "8",
-    //     symbol : 8,
-    //     formula : 8,
-    //     type : "number"
-    // },{
-    //     name : "9",
-    //     symbol : 9,
-    //     formula : 9,
-    //     type : "number"
-    // },
-    // {
-    //     name : "division",
-    //     symbol : "÷",
-    //     formula : "/",
-    //     type : "operator"
-    // },
-    // {
-    //     name : "e",
-    //     symbol : "e",
-    //     formula : "Math.E",
-    //     type : "number"
-    // },
-    // {
-    //     name : "acos",
-    //     symbol : "acos",
-    //     formula : "inv_trigo(Math.acos,",
-    //     type : "trigo_function"
-    // },{
-    //     name : "asin",
-    //     symbol : "asin",
-    //     formula : "inv_trigo(Math.asin,",
-    //     type : "trigo_function"
-    // },{
-    //     name : "atan",
-    //     symbol : "atan",
-    //     formula : "inv_trigo(Math.atan,",
-    //     type : "trigo_function"
-    // },
-    // {
-    //     name : "4",
-    //     symbol : 4,
-    //     formula : 4,
-    //     type : "number"
-    // },{
-    //     name : "5",
-    //     symbol : 5,
-    //     formula : 5,
-    //     type : "number"
-    // },{
-    //     name : "6",
-    //     symbol : 6,
-    //     formula : 6,
-    //     type : "number"
-    // },{
-    //     name : "multiplication",
-    //     symbol : "×",
-    //     formula : "*",
-    //     type : "operator"
-    // },{
-    //     name : "factorial",
-    //     symbol : "×!",
-    //     formula : FACTORIAL,
-    //     type : "math_function"
-    // },{
-    //     name : "exp",
-    //     symbol : "exp",
-    //     formula : "Math.exp",
-    //     type : "math_function"
-    // },{
-    //     name : "ln",
-    //     symbol : "ln",
-    //     formula : "Math.log",
-    //     type : "math_function"
-    // },{
-    //     name : "log",
-    //     symbol : "log",
-    //     formula : "Math.log10",
-    //     type : "math_function"
-    // },{
-    //     name : "1",
-    //     symbol : 1,
-    //     formula : 1,
-    //     type : "number"
-    // },{
-    //     name : "2",
-    //     symbol : 2,
-    //     formula : 2,
-    //     type : "number"
-    // },{
-    //     name : "3",
-    //     symbol : 3,
-    //     formula : 3,
-    //     type : "number"
-    // },{
-    //     name : "subtraction",
-    //     symbol : "–",
-    //     formula : "-",
-    //     type : "operator"
-    // },{
-    //     name : "power",
-    //     symbol : "x<span>y</span>",
-    //     formula : POWER,
-    //     type : "math_function"
-    // },{
-    //     name : "ANS",
-    //     symbol : "ANS",
-    //     formula : "ans",
-    //     type : "number"
-    // },{
-    //     name : "percent",
-    //     symbol : "%",
-    //     formula : "/100",
-    //     type : "number"
-    // },{
-    //     name : "comma",
-    //     symbol : ".",
-    //     formula : ".",
-    //     type : "number"
-    // },{
-    //     name : "0",
-    //     symbol : 0,
-    //     formula : 0,
-    //     type : "number"
-    // },{
-    //     name : "calculate",
-    //     symbol : "=",
-    //     formula : "=",
-    //     type : "calculate"
-    // },{
-    //     name : "addition",
-    //     symbol : "+",
-    //     formula : "+",
-    //     type : "operator"
-    // }
 ];
 
 //creating calculator buttons
 function createCalculatorButtons() {
     const btns_per_row = 7;
     let added_btns = 0;
-  
+
+    // Add history button
+    input_element.innerHTML = "<button id='history'>History</button>" + input_element.innerHTML;
+
     calculator_buttons.forEach(button => {
-      if (added_btns % btns_per_row === 0) {
-        input_element.innerHTML += `<div class='row'></div>`;
-      }
-  
-      const row = document.querySelector('.row:last-child');
-      row.innerHTML += `<button id="${button.name}">
-          ${button.symbol}
+        if (added_btns % btns_per_row === 0) {
+            input_element.innerHTML += `<div class='row'></div>`;
+        }
+
+        const row = document.querySelector('.row:last-child');
+        row.innerHTML += `<button id="${button.name}">
+            ${button.symbol}
         </button>`;
-  
-      added_btns++;
+
+        added_btns++;
     });
-  }
+}
+
   
 createCalculatorButtons();
 
@@ -452,50 +248,28 @@ function angleToggler(){
 input_element.addEventListener("click", event =>{
     const target_btn = event.target;
 
-    calculator_buttons.forEach (button => {
-        if (button.name == target_btn.id) calculator(button);
-    })
-})
+    if (target_btn.id === "history") {
+        showHistory();
+    } else {
+        calculator_buttons.forEach(button => {
+            if (button.name == target_btn.id) calculator(button);
+        });
+    }
+});
 
-// Keyboard event listener
-document.addEventListener("keydown", (event) => {
-    const key = event.key;
-    
-    // Numbers and operators
-    if (/[0-9+\-*/.^()%]/.test(key)) {
-      handleButtonPress(key);
-    }
-    
-    // Enter key
-    if (key === "Enter") {
-      calculateResult();
-    }
-    
-    // Backspace key
-    if (key === "Backspace") {
-      handleDelete();
-    }
-  });
+// event listeners click + keyboard
+// input_element.addEventListener("click", handleButtonClick);
+// window.addEventListener("keydown", handleKeyboardInput);
+
+// function handleButtonClick(event) {
+//     const targetBtn = event.target;
   
-  // Function to handle button press
-  function handleButtonPress(key) {
-    const button = calculator_buttons.find((btn) => btn.symbol === key);
-    if (button) {
-      calculator(button);
-    }
-  }
-  
-  // Function to handle delete key
-  function handleDelete() {
-    const deleteButton = calculator_buttons.find((btn) => btn.name === "delete");
-    calculator(deleteButton);
-  }
-  
-  // Function to calculate the result
-  function calculateResult() {
-    const calculateButton = calculator_buttons.find((btn) => btn.name === "calculate");
-    calculator(calculateButton);
-  }
+//     calculator_buttons.forEach(button => {
+//       if (button.name === targetBtn.id) {
+//         calculator(button);
+//       }
+//     });
+// }
   
 
 
@@ -603,14 +377,14 @@ function calculator(button){// console.log(button)
         // Replace any remaining factorial symbols with the factorial function
         formula_str = formula_str.replace(new RegExp(FACTORIAL, "g"), "factorial(");
 
-
-        console.log(formula_str)
+        // console.log(formula_str)
         //calculate 
         let result;
-        try{
-            result = eval(formula_str);  
-        }catch( error){
-            if (error instanceof SyntaxError){
+        try {
+            result = eval(formula_str);
+            history.push({ expression: formula_str, result: result }); // Store expression and result in history
+        } catch (error) {
+            if (error instanceof SyntaxError) {
                 result = "Syntax Error!";
                 updateOutputResult(result);
                 return;
@@ -629,8 +403,128 @@ function calculator(button){// console.log(button)
     updateOutputOperation( data.operation.join (''));
 }
 
+//function to handle history button click
+function handleHistoryClick(expression, result, index) {
+    // Set the clicked expression as the input value
+    input_element.textContent = expression;
+
+    // Clear the data object and update the output operation
+    data.operation = [result];
+    data.formula = [result];
+    updateOutputOperation(result);
+
+    // Re-create the calculator buttons
+    createCalculatorButtons();
+
+    // Remove the clicked history item from the history array
+    history.splice(index, 1);
+}
+
+
+function deleteHistoryItem(index) {
+    history.splice(index, 1);
+    showHistory();
+}
+
+function showHistory() {
+    // Check if the history container already exists
+    const historyContainer = document.querySelector('.history-container');
+  
+    if (historyContainer) {
+        // Clear the existing content of the history container
+        historyContainer.innerHTML = '';
+    } else {
+        // Create a new history container
+        const historyContainer = document.createElement('div');
+        historyContainer.classList.add('history-container');
+        document.body.appendChild(historyContainer);
+    }
+  
+    // Iterate over the history array and create HTML elements to display each history item
+    history.forEach((item, index) => {
+        // Create a button for each history item
+        const historyButton = document.createElement('button');
+        historyButton.classList.add('history-item');
+        historyButton.textContent = item.expression + " = " + item.result;
+    
+        // Add an event listener to each button to handle the click event
+        historyButton.addEventListener('click', () => {
+            handleHistoryClick(item.expression, item.result, index);
+        });
+    
+        // Create a delete button for each history item
+        const deleteButton = document.createElement('button');
+        deleteButton.classList.add('delete-button');
+        deleteButton.textContent = 'Delete';
+    
+        // Add an event listener to the delete button to handle the click event
+        deleteButton.addEventListener('click', () => {
+            deleteHistoryItem(index);
+        });
+    
+        // Create a container for the history item and append the buttons
+        const historyItemContainer = document.createElement('div');
+        historyItemContainer.classList.add('history-item-container');
+        historyItemContainer.appendChild(historyButton);
+        historyItemContainer.appendChild(deleteButton);
+    
+        // Append the history item container to the history container
+        historyContainer.appendChild(historyItemContainer);
+    });
+}
+
+
+// function showHistory() {
+//     // Create a container to display the history
+//     const historyContainer = document.createElement('div');
+//     historyContainer.classList.add('history-container');
+
+//     // Iterate over the history array and create HTML elements to display each history item
+//     history.forEach((item, index) => {
+//         // Create a button for each history item
+//         const historyButton = document.createElement('button');
+//         historyButton.classList.add('history-item');
+//         historyButton.textContent = item.expression + " = " + item.result;
+
+//         // Add an event listener to each button to handle the click event
+//         historyButton.addEventListener('click', () => {
+//             handleHistoryClick(item.expression, item.result, index);
+//         });
+
+//         // Create a delete button for each history item
+//         const deleteButton = document.createElement('button');
+//         deleteButton.classList.add('delete-button');
+//         deleteButton.textContent = 'Delete';
+
+//         // Add an event listener to the delete button to handle the click event
+//         deleteButton.addEventListener('click', () => {
+//             deleteHistoryItem(index);
+//         });
+
+//         // Create a container for the history item and append the buttons
+//         const historyItemContainer = document.createElement('div');
+//         historyItemContainer.classList.add('history-item-container');
+//         historyItemContainer.appendChild(historyButton);
+//         historyItemContainer.appendChild(deleteButton);
+
+//         // Append the history item container to the history container
+//         historyContainer.appendChild(historyItemContainer);
+//     });
+
+//     // Display the history container by appending it to the body
+//     document.body.appendChild(historyContainer);
+// }
+
+
+// Add an event listener to the delete button to handle the click event
+// deleteButton.addEventListener('click', () => {
+//     deleteHistoryItem(index);
+// });
+
+
 //factorial number getter
 // factorial number getter
+
 function factorialNumberGetter(formula, factorial_search_result) {
     let numbers = [];
     let factorial_sequence = 0;
@@ -786,38 +680,38 @@ function updateOutputResult(result) {
     output_result_element.innerHTML = fixedResult;   // Update the output element with the fixed result
 }
   
-//factorial function
-function factorial(number){
-    if(number % 1 !=0) return gamma(number+1);
+// //factorial function
+// function factorial(number){
+//     if(number % 1 !=0) return gamma(number+1);
 
-    if (number ===0 || number===1 ) return 1;
+//     if (number ===0 || number===1 ) return 1;
 
-    let result =1;
-    for (let i=1; i<= number; i++){
-        result = result *i;
-        if(result ===Infinity) return Infinity
-    }
-    return result
-}
+//     let result =1;
+//     for (let i=1; i<= number; i++){
+//         result = result *i;
+//         if(result ===Infinity) return Infinity
+//     }
+//     return result
+// }
 
-// GAMMA FUNCTINON
-function gamma(n) {  // accurate to about 15 decimal places
-    //some magic constants 
-    var g = 7, // g represents the precision desired, p is the values of p[i] to plug into Lanczos' formula
-        p = [0.99999999999980993, 676.5203681218851, -1259.1392167224028, 771.32342877765313, -176.61502916214059, 12.507343278686905, -0.13857109526572012, 9.9843695780195716e-6, 1.5056327351493116e-7];
-    if(n < 0.5) {
-      return Math.PI / Math.sin(n * Math.PI) / gamma(1 - n);
-    }
-    else {
-      n--;
-      var x = p[0];
-      for(var i = 1; i < g + 2; i++) {
-        x += p[i] / (n + i);
-      }
-      var t = n + g + 0.5;
-      return Math.sqrt(2 * Math.PI) * Math.pow(t, (n + 0.5)) * Math.exp(-t) * x;
-    }
-}
+// // GAMMA FUNCTINON
+// function gamma(n) {  // accurate to about 15 decimal places
+//     //some magic constants 
+//     var g = 7, // g represents the precision desired, p is the values of p[i] to plug into Lanczos' formula
+//         p = [0.99999999999980993, 676.5203681218851, -1259.1392167224028, 771.32342877765313, -176.61502916214059, 12.507343278686905, -0.13857109526572012, 9.9843695780195716e-6, 1.5056327351493116e-7];
+//     if(n < 0.5) {
+//       return Math.PI / Math.sin(n * Math.PI) / gamma(1 - n);
+//     }
+//     else {
+//       n--;
+//       var x = p[0];
+//       for(var i = 1; i < g + 2; i++) {
+//         x += p[i] / (n + i);
+//       }
+//       var t = n + g + 0.5;
+//       return Math.sqrt(2 * Math.PI) * Math.pow(t, (n + 0.5)) * Math.exp(-t) * x;
+//     }
+// }
 
 //trignometric functions
 function trigo(callback, angle){
