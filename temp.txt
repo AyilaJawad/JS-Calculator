@@ -10,7 +10,8 @@ let data = {
     formula: []
 }
 let history = [];
-let variables = {};
+let variables = {}; // Object to store variables
+let currentVariable = null; 
 
 let calculator_buttons = [
     {
@@ -190,18 +191,18 @@ let calculator_buttons = [
         symbol : "%",
         formula : "/100",
         type : "number"
-    },{
-        name: "variable",
-        symbol: "x",
+    },  {
+        name: "add-var",
+        symbol: "Add Var",
         formula: false,
-        type: "variable"
-      }
-    // },{
-    //     name : "factorial",
-    //     symbol : "×!",
-    //     formula : FACTORIAL,
-    //     type : "math_function"
-    // }
+        type: "key",
+      },
+    //   {
+    //     name: "variables",
+    //     symbol: "Variables",
+    //     formula: false,
+    //     type: "key",
+    //   },
 ];
 
 //creating calculator buttons
@@ -222,27 +223,9 @@ function createCalculatorButtons() {
 
         added_btns++;
     });
-    // Add the variable button
-    const row = document.querySelector('.row:last-child');
-    row.innerHTML += `<button id="${calculator_buttons[27].name}">
-        ${calculator_buttons[27].symbol}
-    </button>`;
 }
   
 createCalculatorButtons();
-
-// radians and degrees
-let RADIAN = true;
-
-const rad_btn = document.getElementById('rad');
-const deg_btn = document.getElementById('deg');
-
-rad_btn.classList.add("active-angle");
-
-function angleToggler(){
-    rad_btn.classList.toggle("active-angle");
-    deg_btn.classList.toggle("active-angle");
-}
 
 // event listener clicks
 input_element.addEventListener("click", event =>{
@@ -250,133 +233,253 @@ input_element.addEventListener("click", event =>{
 
     if (target_btn.id === "history") {
         showHistory();
-    } else {
-        calculator_buttons.forEach(button => {
-            if (button.name == target_btn.id) calculator(button);
-        });
+    }else if (target_btn.id === "add-var") {
+        addVariable();
+    } else if (target_btn.id === "variables") {
+        showVariables();
+    } else if (target_btn.classList.contains("variable-value")) {
+        calculator({ type: "variable", symbol: target_btn.textContent, formula: target_btn.textContent });
+      }
+    else {
+    calculator_buttons.forEach(button => {
+        if (button.name == target_btn.id) calculator(button);
+    });
     }
 });
 
 // calculator
-function calculator(button){// console.log(button)
-    if(button.type == "operator"){
-        data.operation.push (button.symbol);
-        data.formula.push (button.formula);
+// function calculator(button){// console.log(button)
+//     if(button.type == "operator"){
+//         data.operation.push (button.symbol);
+//         data.formula.push (button.formula);
 
-    }else if(button.type == "number"){
-        data.operation.push (button.symbol);
-        data.formula.push (button.formula);
+//     }else if(button.type == "number"){
+//         data.operation.push (button.symbol);
+//         data.formula.push (button.formula);
 
-    }else if (button.type == "variable") {
-        const variableName = prompt("Enter variable name:");
-        if (variableName && !OPERATION.includes(variableName) && !isNaN(variableName)) {
-          const variableValue = parseFloat(variableName);
-          variables[button.symbol] = variableValue;
-          data.operation.push(button.symbol);
-          data.formula.push(variableValue);
-        }
-    }else if(button.type == "trigo_function"){     
-        data.operation.push(button.symbol + "(");
-        data.formula.push(button.formula);
-    }else if(button.type == "math_function"){// console.log('math');
-        let symbol, formula;
+//         updateOutputOperation(data.operation.join(""));
 
-        if (button.name == "factorial") {
-            symbol = "!";
-            formula = "factorial(";
+//     }else if(button.type == "trigo_function"){     
+//         data.operation.push(button.symbol + "(");
+//         data.formula.push(button.formula);
+//     }else if(button.type == "math_function"){// console.log('math');
+//         let symbol, formula;
 
-            // Add a closing parenthesis after the number to indicate the end of the factorial sequence
-            let previous_index = data.operation.length - 1;
-            if (previous_index >= 0 && data.formula[previous_index] !== ")") {
-              data.operation.push(")");
-              data.formula.push(")");
-            }
+//         if (button.name == "factorial") {
+//             symbol = "!";
+//             formula = "factorial(";
 
-            data.operation.push(symbol);
-            data.formula.push(formula);
-        }else if (button.name == "power") {
-            symbol = "^(";
-            formula = button.formula;
+//             // Add a closing parenthesis after the number to indicate the end of the factorial sequence
+//             let previous_index = data.operation.length - 1;
+//             if (previous_index >= 0 && data.formula[previous_index] !== ")") {
+//               data.operation.push(")");
+//               data.formula.push(")");
+//             }
 
-            data.operation.push(symbol);
-            data.formula.push(formula);
-        }          
-        else if(button.name == "square"){
-            symbol = "^(";
-            formula = button.formula; 
+//             data.operation.push(symbol);
+//             data.formula.push(formula);
+//         }else if (button.name == "power") {
+//             symbol = "^(";
+//             formula = button.formula;
 
-            data.operation.push(symbol);
-            data.formula.push(formula);
+//             data.operation.push(symbol);
+//             data.formula.push(formula);
+//         }          
+//         else if(button.name == "square"){
+//             symbol = "^(";
+//             formula = button.formula; 
 
-            data.operation.push(2);
-            data.formula.push(2);
-        }else{
-            symbol= button.symbol + "(";
-            formula = button.formula + "(";
-            data.operation.push(symbol);
-            data.formula.push(formula);
-        }
+//             data.operation.push(symbol);
+//             data.formula.push(formula);
 
-    }else if(button.type == "key"){ 
-        if( button.name == "clear"){
-            data.operation = [];
-            data.formula = [];
+//             data.operation.push(2);
+//             data.formula.push(2);
+//         }else{
+//             symbol= button.symbol + "(";
+//             formula = button.formula + "(";
+//             data.operation.push(symbol);
+//             data.formula.push(formula);
+//         }
 
-            updateOutputResult(0);
-        }else if(button.name == "delete"){
-            data.operation.pop();
-            data.formula.pop();
+//     }else if(button.type == "key"){ 
+//         if( button.name == "clear"){
+//             data.operation = [];
+//             data.formula = [];
 
-        }else if(button.name == "rad"){
-            RADIAN = true;
-            angleToggler();
-        }else if(button.name == "deg"){
-            RADIAN = false;
-            angleToggler();
-        }
-    } 
-    else if(button.type == "calculate"){
-        formula_str = data.formula.join('');
+//             updateOutputResult(0);
+//         }else if(button.name == "delete"){
+//             data.operation.pop();
+//             data.formula.pop();
 
-        //fixing power issues
-        // searches the power
-        let power_search_result = search(data.formula, POWER);
-        // console.log(data.formula, power_search_result, factorial_search_result);
-        // getting base for power function // and replacing it with the right formula
-        const bases = powerBaseGetter (data.formula, power_search_result);
-        bases.forEach((base) => {
-            let toReplace = base + POWER;
-            let replacement = "Math.pow(" + base + ",";
+//         }else if(button.name == "rad"){
+//             RADIAN = true;
+//             angleToggler();
+//         }else if(button.name == "deg"){
+//             RADIAN = false;
+//             angleToggler();
+//         }
+//     }else if(button.type == "calculate"){
+//         formula_str = data.formula.join('');
 
-            formula_str = formula_str.replace(toReplace, replacement);
-          });
-        // console.log(bases);
+//         //fixing power issues
+//         // searches the power
+//         let power_search_result = search(data.formula, POWER);
+//         // console.log(data.formula, power_search_result, factorial_search_result);
+//         // getting base for power function // and replacing it with the right formula
+//         const bases = powerBaseGetter (data.formula, power_search_result);
+//         bases.forEach((base) => {
+//             let toReplace = base + POWER;
+//             let replacement = "Math.pow(" + base + ",";
+
+//             formula_str = formula_str.replace(toReplace, replacement);
+//           });
+//         // console.log(bases);
         
-        console.log(formula_str)
-       //calculate 
-        let result;
-        try {
-            result = eval(formula_str);
-            history.push({ expression: formula_str, result: result }); // Store expression and result in history
-        } catch (error) {
-            if (error instanceof SyntaxError) {
-                result = "Syntax Error!";
-                updateOutputResult(result);
-                return;
-            }
+//         console.log(formula_str)
+//        //calculate 
+//         let result;
+//         try {
+//             result = eval(formula_str);
+//             history.push({ expression: formula_str, result: result }); // Store expression and result in history
+//         } catch (error) {
+//             if (error instanceof SyntaxError) {
+//                 result = "Syntax Error!";
+//                 updateOutputResult(result);
+//                 return;
+//             }
+//         }
+
+//         // saving result for later use
+//         ans = result;
+//         data.operation = [result];
+//         data.formula = [result];
+
+//         updateOutputResult(result);
+//         return; 
+//     }else if (button.type == "variable") {
+//         const variableValue = button.symbol;
+    
+//         // Store the variable value in the currentVariable
+//         currentVariable = variableValue;
+    
+//         // Update the output result with the variable value
+//         updateOutputResult(variableValue);
+//     }
+    
+
+//     updateOutputOperation( data.operation.join (''));
+// }
+
+function calculator(button) {
+    if (button.type === "operator") {
+      data.operation.push(button.symbol);
+      data.formula.push(button.formula);
+    } else if (button.type === "number") {
+      data.operation.push(button.symbol);
+      data.formula.push(button.formula);
+      updateOutputOperation(data.operation.join(""));
+    } else if (button.type === "trigo_function") {
+      data.operation.push(button.symbol + "(");
+      data.formula.push(button.formula);
+    } else if (button.type === "math_function") {
+      let symbol, formula;
+  
+      if (button.name === "factorial") {
+        symbol = "!";
+        formula = "factorial(";
+  
+        // Add a closing parenthesis after the number to indicate the end of the factorial sequence
+        let previous_index = data.operation.length - 1;
+        if (previous_index >= 0 && data.formula[previous_index] !== ")") {
+          data.operation.push(")");
+          data.formula.push(")");
         }
-
-        // saving result for later use
-        ans = result;
-        data.operation = [result];
-        data.formula = [result];
-
-        updateOutputResult(result);
-        return; 
+  
+        data.operation.push(symbol);
+        data.formula.push(formula);
+      } else if (button.name === "power") {
+        symbol = "^(";
+        formula = button.formula;
+  
+        data.operation.push(symbol);
+        data.formula.push(formula);
+      } else if (button.name === "square") {
+        symbol = "^(";
+        formula = button.formula;
+  
+        data.operation.push(symbol);
+        data.formula.push(formula);
+  
+        data.operation.push(2);
+        data.formula.push(2);
+      } else {
+        symbol = button.symbol + "(";
+        formula = button.formula + "(";
+        data.operation.push(symbol);
+        data.formula.push(formula);
+      }
+    } else if (button.type === "key") {
+      if (button.name === "clear") {
+        data.operation = [];
+        data.formula = [];
+  
+        updateOutputResult(0);
+      } else if (button.name === "delete") {
+        data.operation.pop();
+        data.formula.pop();
+      } else if (button.name === "rad") {
+        RADIAN = true;
+        angleToggler();
+      } else if (button.name === "deg") {
+        RADIAN = false;
+        angleToggler();
+      } else if (button.name === "add-var") {
+        addVariable();
+      }
+    } else if (button.type === "calculate") {
+      formula_str = data.formula.join("");
+  
+      // Fix power issues
+      let power_search_result = search(data.formula, POWER);
+      const bases = powerBaseGetter(data.formula, power_search_result);
+      bases.forEach((base) => {
+        let toReplace = base + POWER;
+        let replacement = "Math.pow(" + base + ",";
+  
+        formula_str = formula_str.replace(toReplace, replacement);
+      });
+  
+      let result;
+      try {
+        result = eval(formula_str);
+        history.push({ expression: formula_str, result: result });
+      } catch (error) {
+        if (error instanceof SyntaxError) {
+          result = "Syntax Error!";
+          updateOutputResult(result);
+          return;
+        }
+      }
+  
+      ans = result;
+      data.operation = [result];
+      data.formula = [result];
+  
+      updateOutputResult(result);
+      return;
+    } else if (button.type === "variable") {
+      const variableValue = variables[button.symbol];
+  
+      if (variableValue !== undefined) {
+        data.operation.push(variableValue);
+        data.formula.push(variableValue);
+        updateOutputOperation(data.operation.join(""));
+      }
     }
-
-    updateOutputOperation( data.operation.join (''));
-}
+  
+    updateOutputOperation(data.operation.join(""));
+  }
+  
 
 //function to handle history button click
 function handleHistoryClick(expression, result, index) {
@@ -394,13 +497,10 @@ function handleHistoryClick(expression, result, index) {
     // Remove the clicked history item from the history array
     history.splice(index, 1);
 }
-
-
 function deleteHistoryItem(index) {
     history.splice(index, 1);
     showHistory();
 }
-
 function showHistory() {
     // Check if the history container already exists
     const historyContainer = document.querySelector('.history-container');
@@ -448,6 +548,65 @@ function showHistory() {
     });
 }
 
+// Function to handle the "Add Var" button click
+function addVariable() {
+    const variableName = prompt("Enter variable name and value (e.g., x=5):");
+  
+    if (variableName) {
+      const [name, value] = variableName.split("=");
+  
+      if (name && value && !isNaN(value) && !OPERATION.includes(name)) {
+        const trimmedName = name.trim();
+        
+        // Check if the variable name is already used
+        if (trimmedName in variables) {
+          alert("Variable name already taken!");
+        } else {
+          variables[trimmedName] = parseFloat(value.trim());
+          showVariables();
+        }
+      }
+    }
+  }
+// Function to handle the "Variables" button click
+function showVariables() {
+    let variablesContainer = document.querySelector(".variables-container");
+
+    if (!variablesContainer) {
+    // Create a new variables container
+    variablesContainer = document.createElement("div");
+    variablesContainer.classList.add("variables-container");
+    document.body.appendChild(variablesContainer);
+    }
+
+    // Clear the existing content of the variables container
+    variablesContainer.innerHTML = "";
+
+    // Iterate over the variables object and create HTML elements to display each variable
+    for (const variable in variables) {
+    const variableValue = variables[variable];
+
+    // Create a container for each variable
+    const variableContainer = document.createElement("div");
+    variableContainer.classList.add("variable-container");
+    variableContainer.innerHTML = `<span class="variable-name">${variable}</span> : <span class="variable-value">${variableValue}</span>`;
+
+    // Add an event listener to each variable container
+    variableContainer.addEventListener("click", () => {
+        // Retrieve the clicked variable value
+        const clickedValue = variableValue;
+
+        // Append the clicked value to the output operation element
+        output_operation_element.innerHTML += clickedValue;
+    });
+
+    // Append the variable container to the variables container
+    variablesContainer.appendChild(variableContainer);
+    }
+}
+// Call the showVariables function with the "editable" parameter set to true
+showVariables(true);
+
 //power number getter
 function powerBaseGetter(formula, power_search_result) {
     let power_bases = [];
@@ -475,56 +634,25 @@ function powerBaseGetter(formula, power_search_result) {
 }
 
 //seacrch an array
-function search(array, keyword) {
-    let search_result = [];
-  
-    array.forEach((element, index) => {
-      if (element === keyword || (typeof element === "string" && element.startsWith("x"))) {
-        search_result.push(index);
-      }
-    });
-  
-    return search_result;
-  }
-// function search(array, keyword){
-//     let seacrch_result = [];
+function search(array, keyword){
+    let seacrch_result = [];
 
-//     array.forEach((element, index) => {
-//         if (element == keyword) seacrch_result.push(index);
-//     })
-//     return seacrch_result;
-// }
+    array.forEach((element, index) => {
+        if (element == keyword) seacrch_result.push(index);
+    })
+    return seacrch_result;
+}
 //updating the output
 function updateOutputOperation(operation){
     output_operation_element.innerHTML = operation;
 }
-// function updateOutputResult(result) {
-//     if (result === "Syntax Error!") {
-//       output_result_element.innerHTML = result;
-//     } else {
-//       const fixedResult = parseFloat(result.toFixed(4));  //fixing our output result to 4 decimal places
-//       output_result_element.innerHTML = fixedResult;
-//     }
-//   }
-
 function updateOutputResult(result) {
     if (result === "Syntax Error!") {
       output_result_element.innerHTML = result;
     } else {
-      const evaluatedResult = evaluateVariables(result);
-      const fixedResult = parseFloat(evaluatedResult.toFixed(4));
+      const fixedResult = parseFloat(result.toFixed(4));  //fixing our output result to 4 decimal places
       output_result_element.innerHTML = fixedResult;
     }
-  }
-  
-  function evaluateVariables(expression) {
-    const variablesRegex = /x(\d+)/g;
-    const evaluatedExpression = expression.replace(variablesRegex, (match, p1) => {
-      const variableName = "x" + p1;
-      return variables[variableName] || match;
-    });
-  
-    return evaluatedExpression;
   }
 
 //trignometric functions
@@ -543,11 +671,15 @@ function inv_trigo(callback, value){ //Inverse trignometric functions
     return angle;
 }
 
+// radians and degrees
+let RADIAN = true;
 
-just like i have a history button that maintains the history list and upon clicking it user can see the history and use any expression's answer from that list
+const rad_btn = document.getElementById('rad');
+const deg_btn = document.getElementById('deg');
 
-in a similar way i want to achieve another button "add var" 
-this should prompt user to enter a variable name and its value, 
-and store that variable name and its corresponding value in a list
-and upon clicking another button "variables" the user shall be able to view the list of all variables and their corresponing values 
-plz help me achive this
+rad_btn.classList.add("active-angle");
+
+function angleToggler(){
+    rad_btn.classList.toggle("active-angle");
+    deg_btn.classList.toggle("active-angle");
+}

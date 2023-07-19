@@ -171,12 +171,15 @@ let calculator_buttons = [
         symbol : "+",
         formula : "+",
         type : "operator"
-    },{
-        name : "calculate",
-        symbol : "=",
-        formula : "=",
-        type : "calculate"
-    },{
+        
+    },
+    {
+        name: "calculate",
+        symbol: "=",
+        formula: "ANS",
+        type: "calculate"
+        },
+    {
         name : "0",
         symbol : 0,
         formula : 0,
@@ -196,6 +199,11 @@ let calculator_buttons = [
         symbol: "Add Var",
         formula: false,
         type: "key",
+      },  {
+        name: "variable",
+        symbol: "Var",
+        formula: false,
+        type: "variable",
       },
     //   {
     //     name: "variables",
@@ -207,169 +215,289 @@ let calculator_buttons = [
 
 //creating calculator buttons
 function createCalculatorButtons() {
-    const btns_per_row = 7;
-    let added_btns = 0;
-    // Add history button
-    input_element.innerHTML = "<button id='history'>History</button>" + input_element.innerHTML;
+  const btns_per_row = 7;
+  let added_btns = 0;
 
-    calculator_buttons.forEach(button => {
-        if (added_btns % btns_per_row === 0) {
-            input_element.innerHTML += `<div class='row'></div>`;
-        }
-        const row = document.querySelector('.row:last-child');
-        row.innerHTML += `<button id="${button.name}">
-            ${button.symbol}
-        </button>`;
+  // Add history button
+  input_element.innerHTML = "<button id='history'>History</button>" + input_element.innerHTML;
 
-        added_btns++;
-    });
+  calculator_buttons.forEach(button => {
+    if (added_btns % btns_per_row === 0) {
+      input_element.innerHTML += `<div class='row'></div>`;
+    }
+    const row = document.querySelector('.row:last-child');
+    row.innerHTML += `<button id="${button.name}">
+        ${button.symbol}
+    </button>`;
+
+    added_btns++;
+
+    if (button.type === "variable") {
+      const variableButton = document.getElementById(button.name);
+      variableButton.addEventListener("click", () => {
+        handleVariableClick(button.symbol);
+      });
+    }
+  });
 }
-  
 createCalculatorButtons();
 
-// event listener clicks
-input_element.addEventListener("click", event =>{
-    const target_btn = event.target;
-
-    if (target_btn.id === "history") {
-        showHistory();
-    }else if (target_btn.id === "add-var") {
-        addVariable();
-    } else if (target_btn.id === "variables") {
-        showVariables();
-    } else if (target_btn.classList.contains("variable-value")) {
-        calculator({ type: "variable", symbol: target_btn.textContent, formula: target_btn.textContent });
-      }
-    else {
-    calculator_buttons.forEach(button => {
-        if (button.name == target_btn.id) calculator(button);
-    });
-    }
-});
-
 // calculator
-function calculator(button){// console.log(button)
-    if(button.type == "operator"){
-        data.operation.push (button.symbol);
-        data.formula.push (button.formula);
+// function calculator(button){// console.log(button)
+//     if(button.type == "operator"){
+//         data.operation.push (button.symbol);
+//         data.formula.push (button.formula);
 
-    }else if(button.type == "number"){
-        data.operation.push (button.symbol);
-        data.formula.push (button.formula);
+//     }else if(button.type == "number"){
+//         data.operation.push (button.symbol);
+//         data.formula.push (button.formula);
 
-        updateOutputOperation(data.operation.join(""));
+//         updateOutputOperation(data.operation.join(""));
 
-    }else if(button.type == "trigo_function"){     
-        data.operation.push(button.symbol + "(");
-        data.formula.push(button.formula);
-    }else if(button.type == "math_function"){// console.log('math');
-        let symbol, formula;
+//     }else if(button.type == "trigo_function"){     
+//         data.operation.push(button.symbol + "(");
+//         data.formula.push(button.formula);
+//     }else if(button.type == "math_function"){// console.log('math');
+//         let symbol, formula;
 
-        if (button.name == "factorial") {
-            symbol = "!";
-            formula = "factorial(";
+//         if (button.name == "factorial") {
+//             symbol = "!";
+//             formula = "factorial(";
 
-            // Add a closing parenthesis after the number to indicate the end of the factorial sequence
-            let previous_index = data.operation.length - 1;
-            if (previous_index >= 0 && data.formula[previous_index] !== ")") {
-              data.operation.push(")");
-              data.formula.push(")");
-            }
+//             // Add a closing parenthesis after the number to indicate the end of the factorial sequence
+//             let previous_index = data.operation.length - 1;
+//             if (previous_index >= 0 && data.formula[previous_index] !== ")") {
+//               data.operation.push(")");
+//               data.formula.push(")");
+//             }
 
-            data.operation.push(symbol);
-            data.formula.push(formula);
-        }else if (button.name == "power") {
-            symbol = "^(";
-            formula = button.formula;
+//             data.operation.push(symbol);
+//             data.formula.push(formula);
+//         }else if (button.name == "power") {
+//             symbol = "^(";
+//             formula = button.formula;
 
-            data.operation.push(symbol);
-            data.formula.push(formula);
-        }          
-        else if(button.name == "square"){
-            symbol = "^(";
-            formula = button.formula; 
+//             data.operation.push(symbol);
+//             data.formula.push(formula);
+//         }          
+//         else if(button.name == "square"){
+//             symbol = "^(";
+//             formula = button.formula; 
 
-            data.operation.push(symbol);
-            data.formula.push(formula);
+//             data.operation.push(symbol);
+//             data.formula.push(formula);
 
-            data.operation.push(2);
-            data.formula.push(2);
-        }else{
-            symbol= button.symbol + "(";
-            formula = button.formula + "(";
-            data.operation.push(symbol);
-            data.formula.push(formula);
-        }
+//             data.operation.push(2);
+//             data.formula.push(2);
+//         }else{
+//             symbol= button.symbol + "(";
+//             formula = button.formula + "(";
+//             data.operation.push(symbol);
+//             data.formula.push(formula);
+//         }
 
-    }else if(button.type == "key"){ 
-        if( button.name == "clear"){
-            data.operation = [];
-            data.formula = [];
+//     }else if(button.type == "key"){ 
+//         if( button.name == "clear"){
+//             data.operation = [];
+//             data.formula = [];
 
-            updateOutputResult(0);
-        }else if(button.name == "delete"){
-            data.operation.pop();
-            data.formula.pop();
+//             updateOutputResult(0);
+//         }else if(button.name == "delete"){
+//             data.operation.pop();
+//             data.formula.pop();
 
-        }else if(button.name == "rad"){
-            RADIAN = true;
-            angleToggler();
-        }else if(button.name == "deg"){
-            RADIAN = false;
-            angleToggler();
-        }
-    }else if(button.type == "calculate"){
-        formula_str = data.formula.join('');
+//         }else if(button.name == "rad"){
+//             RADIAN = true;
+//             angleToggler();
+//         }else if(button.name == "deg"){
+//             RADIAN = false;
+//             angleToggler();
+//         }
+//     }else if(button.type == "calculate"){
+//         formula_str = data.formula.join('');
 
-        //fixing power issues
-        // searches the power
-        let power_search_result = search(data.formula, POWER);
-        // console.log(data.formula, power_search_result, factorial_search_result);
-        // getting base for power function // and replacing it with the right formula
-        const bases = powerBaseGetter (data.formula, power_search_result);
-        bases.forEach((base) => {
-            let toReplace = base + POWER;
-            let replacement = "Math.pow(" + base + ",";
+//         //fixing power issues
+//         // searches the power
+//         let power_search_result = search(data.formula, POWER);
+//         // console.log(data.formula, power_search_result, factorial_search_result);
+//         // getting base for power function // and replacing it with the right formula
+//         const bases = powerBaseGetter (data.formula, power_search_result);
+//         bases.forEach((base) => {
+//             let toReplace = base + POWER;
+//             let replacement = "Math.pow(" + base + ",";
 
-            formula_str = formula_str.replace(toReplace, replacement);
-          });
-        // console.log(bases);
+//             formula_str = formula_str.replace(toReplace, replacement);
+//           });
+//         // console.log(bases);
         
-        console.log(formula_str)
-       //calculate 
-        let result;
-        try {
-            result = eval(formula_str);
-            history.push({ expression: formula_str, result: result }); // Store expression and result in history
-        } catch (error) {
-            if (error instanceof SyntaxError) {
-                result = "Syntax Error!";
-                updateOutputResult(result);
-                return;
-            }
-        }
+//         console.log(formula_str)
+//        //calculate 
+//         let result;
+//         try {
+//             result = eval(formula_str);
+//             history.push({ expression: formula_str, result: result }); // Store expression and result in history
+//         } catch (error) {
+//             if (error instanceof SyntaxError) {
+//                 result = "Syntax Error!";
+//                 updateOutputResult(result);
+//                 return;
+//             }
+//         }
 
-        // saving result for later use
-        ans = result;
-        data.operation = [result];
-        data.formula = [result];
+//         // saving result for later use
+//         ans = result;
+//         data.operation = [result];
+//         data.formula = [result];
 
-        updateOutputResult(result);
-        return; 
-    }else if (button.type == "variable") {
-        const variableValue = button.symbol;
+//         updateOutputResult(result);
+//         return; 
+//     }else if (button.type == "variable") {
+//         const variableValue = button.symbol;
     
-        // Store the variable value in the currentVariable
-        currentVariable = variableValue;
+//         // Store the variable value in the currentVariable
+//         currentVariable = variableValue;
     
-        // Update the output result with the variable value
-        updateOutputResult(variableValue);
+//         // Update the output result with the variable value
+//         updateOutputResult(variableValue);
+//     }
+    
+
+//     updateOutputOperation( data.operation.join (''));
+// }
+function calculator(button) {
+  if (button.type === "operator") {
+    data.operation.push(button.symbol);
+    data.formula.push(button.formula);
+  } else if (button.type === "number") {
+    data.operation.push(button.symbol);
+    data.formula.push(button.formula);
+    updateOutputOperation(data.operation.join(""));
+  } else if (button.type === "trigo_function") {
+    data.operation.push(button.symbol + "(");
+    data.formula.push(button.formula);
+  } else if (button.type === "math_function") {
+    let symbol, formula;
+
+    if (button.name === "factorial") {
+      symbol = "!";
+      formula = "factorial(";
+
+      // Add a closing parenthesis after the number to indicate the end of the factorial sequence
+      let previous_index = data.operation.length - 1;
+      if (previous_index >= 0 && data.formula[previous_index] !== ")") {
+        data.operation.push(")");
+        data.formula.push(")");
+      }
+
+      data.operation.push(symbol);
+      data.formula.push(formula);
+    } else if (button.name === "power") {
+      symbol = "^(";
+      formula = button.formula;
+
+      data.operation.push(symbol);
+      data.formula.push(formula);
+    } else if (button.name === "square") {
+      symbol = "^(";
+      formula = button.formula;
+
+      data.operation.push(symbol);
+      data.formula.push(formula);
+
+      data.operation.push(2);
+      data.formula.push(2);
+    } else {
+      symbol = button.symbol + "(";
+      formula = button.formula + "(";
+      data.operation.push(symbol);
+      data.formula.push(formula);
     }
-    
+  } else if (button.type === "key") {
+    if (button.name === "clear") {
+      data.operation = [];
+      data.formula = [];
 
-    updateOutputOperation( data.operation.join (''));
+      updateOutputResult(0);
+    } else if (button.name === "delete") {
+      data.operation.pop();
+      data.formula.pop();
+    } else if (button.name === "rad") {
+      RADIAN = true;
+      angleToggler();
+    } else if (button.name === "deg") {
+      RADIAN = false;
+      angleToggler();
+    } else if (button.name === "add-var") {
+      addVariable();
+    }
+  } else if (button.type === "calculate") {
+    formula_str = data.formula.join("");
+
+    // Fix power issues
+    let power_search_result = search(data.formula, POWER);
+    const bases = powerBaseGetter(data.formula, power_search_result);
+    bases.forEach((base) => {
+      let toReplace = base + POWER;
+      let replacement = "Math.pow(" + base + ",";
+
+      formula_str = formula_str.replace(toReplace, replacement);
+    });
+
+    let result;
+    try {
+      if (formula_str === "ANS") {
+        result = ans;
+      } else {
+        result = eval(formula_str);
+        history.push({ expression: formula_str, result: result });
+      }
+    } catch (error) {
+      if (error instanceof SyntaxError) {
+        result = "Syntax Error!";
+        updateOutputResult(result);
+        return;
+      }
+    }
+  
+    ans = result;
+    data.operation = [result];
+    data.formula = [result];
+  
+    updateOutputResult(result);
+    return;
+  } else if (button.type === "variable") {
+      const variableSymbol = button.symbol;
+      const variableValue = variables[variableSymbol];
+  
+      if (variableValue !== undefined) {
+        data.operation.push(variableSymbol);
+        data.formula.push(variableValue);
+        updateOutputOperation(data.operation.join(""));
+      }
+    }
+
+  updateOutputOperation(data.operation.join(""));
 }
+  
+// event listener clicks
+input_element.addEventListener("click", event => {
+  const target_btn = event.target;
 
+  if (target_btn.id === "history") {
+    showHistory();
+  } else if (target_btn.id === "add-var") {
+    addVariable();
+  } else if (target_btn.id === "variables") {
+    showVariables();
+  } else {
+    const button = calculator_buttons.find(btn => btn.name === target_btn.id);
+    if (button) {
+      calculator(button);
+    } else if (target_btn.classList.contains("variable-value")) {
+      handleVariableClick(target_btn.textContent);
+    }
+  }
+});
 //function to handle history button click
 function handleHistoryClick(expression, result, index) {
     // Set the clicked expression as the input value
@@ -494,7 +622,25 @@ function showVariables() {
     }
 }
 // Call the showVariables function with the "editable" parameter set to true
-showVariables(true);
+// showVariables(true);
+showVariables();
+// Function to handle the "Variable" button click
+function handleVariableClick(variableSymbol) {
+  const variableValue = variables[variableSymbol];
+
+  if (variableValue !== undefined) {
+    // Append the variable value to the output operation element
+    output_operation_element.innerHTML += variableValue;
+
+    // Add the variable value to the data object
+    data.operation.push(variableValue);
+    data.formula.push(variableValue);
+  }
+  // updateOutputOperation(variableValue);
+
+  // // Re-create the calculator buttons
+  // createCalculatorButtons();
+}
 
 //power number getter
 function powerBaseGetter(formula, power_search_result) {
