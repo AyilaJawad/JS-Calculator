@@ -289,13 +289,6 @@ function calculator(button){// console.log(button)
     }else if(button.type == "math_function"){// console.log('math');
         let symbol, formula;
         
-        // if(button.name == "factorial"){
-        //     symbol = "!";
-        //     formula = button.formula;
-
-        //     data.operation.push(symbol);
-        //     data.formula.push(formula);
-        // }
         if (button.name == "factorial") {
             symbol = "!";
             formula = "factorial(";
@@ -352,6 +345,12 @@ function calculator(button){// console.log(button)
     } 
     else if(button.type == "calculate"){
         formula_str = data.formula.join('');
+
+        // if (formula_str.includes("(") || formula_str.includes(")")) {
+        //     result = "Syntax Error!";
+        //     updateOutputResult(result);
+        //     return;
+        // }
         
         //fixing power and factorial issues
         // searches the power
@@ -402,6 +401,7 @@ function calculator(button){// console.log(button)
 
     updateOutputOperation( data.operation.join (''));
 }
+  
 
 //function to handle history button click
 function handleHistoryClick(expression, result, index) {
@@ -632,6 +632,7 @@ function factorialNumberGetter(formula, factorial_search_result) {
 // }
 
 // power base getter
+
 function powerBaseGetter(formula, power_search_result) {
     let power_bases = [];
   
@@ -671,47 +672,53 @@ function search(array, keyword){
 function updateOutputOperation(operation){
     output_operation_element.innerHTML = operation;
 }
-function updateOutputResult(result){
-    output_result_element.innerHTML = result; 
-}
+
+// function updateOutputResult(result) {
+//     const fixedResult = parseFloat(result.toFixed(4)); //this will fix our output result to 4 decimal place.
+//     output_result_element.innerHTML = fixedResult;   // Update the output element with the fixed result
+// }
 
 function updateOutputResult(result) {
-    const fixedResult = parseFloat(result.toFixed(4)); //this will fix our output result to 4 decimal place.
-    output_result_element.innerHTML = fixedResult;   // Update the output element with the fixed result
-}
+    if (result === "Syntax Error!") {
+      output_result_element.innerHTML = result;
+    } else {
+      const fixedResult = parseFloat(result.toFixed(4));  //fixing our output result to 4 decimal places
+      output_result_element.innerHTML = fixedResult;
+    }
+  }
   
-// //factorial function
-// function factorial(number){
-//     if(number % 1 !=0) return gamma(number+1);
+//factorial function
+function factorial(number){
+    if(number % 1 !=0) return gamma(number+1);
 
-//     if (number ===0 || number===1 ) return 1;
+    if (number ===0 || number===1 ) return 1;
 
-//     let result =1;
-//     for (let i=1; i<= number; i++){
-//         result = result *i;
-//         if(result ===Infinity) return Infinity
-//     }
-//     return result
-// }
+    let result =1;
+    for (let i=1; i<= number; i++){
+        result = result *i;
+        if(result ===Infinity) return Infinity
+    }
+    return result
+}
 
-// // GAMMA FUNCTINON
-// function gamma(n) {  // accurate to about 15 decimal places
-//     //some magic constants 
-//     var g = 7, // g represents the precision desired, p is the values of p[i] to plug into Lanczos' formula
-//         p = [0.99999999999980993, 676.5203681218851, -1259.1392167224028, 771.32342877765313, -176.61502916214059, 12.507343278686905, -0.13857109526572012, 9.9843695780195716e-6, 1.5056327351493116e-7];
-//     if(n < 0.5) {
-//       return Math.PI / Math.sin(n * Math.PI) / gamma(1 - n);
-//     }
-//     else {
-//       n--;
-//       var x = p[0];
-//       for(var i = 1; i < g + 2; i++) {
-//         x += p[i] / (n + i);
-//       }
-//       var t = n + g + 0.5;
-//       return Math.sqrt(2 * Math.PI) * Math.pow(t, (n + 0.5)) * Math.exp(-t) * x;
-//     }
-// }
+// GAMMA FUNCTINON
+function gamma(n) {  // accurate to about 15 decimal places
+    //some magic constants 
+    var g = 7, // g represents the precision desired, p is the values of p[i] to plug into Lanczos' formula
+        p = [0.99999999999980993, 676.5203681218851, -1259.1392167224028, 771.32342877765313, -176.61502916214059, 12.507343278686905, -0.13857109526572012, 9.9843695780195716e-6, 1.5056327351493116e-7];
+    if(n < 0.5) {
+      return Math.PI / Math.sin(n * Math.PI) / gamma(1 - n);
+    }
+    else {
+      n--;
+      var x = p[0];
+      for(var i = 1; i < g + 2; i++) {
+        x += p[i] / (n + i);
+      }
+      var t = n + g + 0.5;
+      return Math.sqrt(2 * Math.PI) * Math.pow(t, (n + 0.5)) * Math.exp(-t) * x;
+    }
+}
 
 //trignometric functions
 function trigo(callback, angle){
