@@ -10,6 +10,8 @@ let data = {
     formula: []
 }
 let history = [];
+let variables = {}; // Object to store variables
+let currentVariable = null; 
 
 let calculator_buttons = [
     {
@@ -189,12 +191,18 @@ let calculator_buttons = [
         symbol : "%",
         formula : "/100",
         type : "number"
-    },{
-        name : "factorial",
-        symbol : "×!",
-        formula : FACTORIAL,
-        type : "math_function"
-    }
+    },  {
+        name: "add-var",
+        symbol: "Add Var",
+        formula: false,
+        type: "key",
+      },
+    //   {
+    //     name: "variables",
+    //     symbol: "Variables",
+    //     formula: false,
+    //     type: "key",
+    //   },
 ];
 
 //creating calculator buttons
@@ -219,29 +227,23 @@ function createCalculatorButtons() {
   
 createCalculatorButtons();
 
-// radians and degrees
-let RADIAN = true;
-
-const rad_btn = document.getElementById('rad');
-const deg_btn = document.getElementById('deg');
-
-rad_btn.classList.add("active-angle");
-
-function angleToggler(){
-    rad_btn.classList.toggle("active-angle");
-    deg_btn.classList.toggle("active-angle");
-}
-
 // event listener clicks
 input_element.addEventListener("click", event =>{
     const target_btn = event.target;
 
     if (target_btn.id === "history") {
         showHistory();
-    } else {
-        calculator_buttons.forEach(button => {
-            if (button.name == target_btn.id) calculator(button);
-        });
+    }else if (target_btn.id === "add-var") {
+        addVariable();
+    } else if (target_btn.id === "variables") {
+        showVariables();
+    } else if (target_btn.classList.contains("variable-value")) {
+        calculator({ type: "variable", symbol: target_btn.textContent, formula: target_btn.textContent });
+      }
+    else {
+    calculator_buttons.forEach(button => {
+        if (button.name == target_btn.id) calculator(button);
+    });
     }
 });
 
@@ -254,6 +256,8 @@ function calculator(button){// console.log(button)
     }else if(button.type == "number"){
         data.operation.push (button.symbol);
         data.formula.push (button.formula);
+
+        updateOutputOperation(data.operation.join(""));
 
     }else if(button.type == "trigo_function"){     
         data.operation.push(button.symbol + "(");
@@ -314,8 +318,7 @@ function calculator(button){// console.log(button)
             RADIAN = false;
             angleToggler();
         }
-    } 
-    else if(button.type == "calculate"){
+    }else if(button.type == "calculate"){
         formula_str = data.formula.join('');
 
         //fixing power issues
@@ -353,7 +356,16 @@ function calculator(button){// console.log(button)
 
         updateOutputResult(result);
         return; 
+    }else if (button.type == "variable") {
+        const variableValue = button.symbol;
+    
+        // Store the variable value in the currentVariable
+        currentVariable = variableValue;
+    
+        // Update the output result with the variable value
+        updateOutputResult(variableValue);
     }
+    
 
     updateOutputOperation( data.operation.join (''));
 }
@@ -374,13 +386,10 @@ function handleHistoryClick(expression, result, index) {
     // Remove the clicked history item from the history array
     history.splice(index, 1);
 }
-
-
 function deleteHistoryItem(index) {
     history.splice(index, 1);
     showHistory();
 }
-
 function showHistory() {
     // Check if the history container already exists
     const historyContainer = document.querySelector('.history-container');
@@ -427,6 +436,65 @@ function showHistory() {
         historyContainer.appendChild(historyItemContainer);
     });
 }
+
+// Function to handle the "Add Var" button click
+function addVariable() {
+    const variableName = prompt("Enter variable name and value (e.g., x=5):");
+  
+    if (variableName) {
+      const [name, value] = variableName.split("=");
+  
+      if (name && value && !isNaN(value) && !OPERATION.includes(name)) {
+        const trimmedName = name.trim();
+        
+        // Check if the variable name is already used
+        if (trimmedName in variables) {
+          alert("Variable name already taken!");
+        } else {
+          variables[trimmedName] = parseFloat(value.trim());
+          showVariables();
+        }
+      }
+    }
+  }
+// Function to handle the "Variables" button click
+function showVariables() {
+    let variablesContainer = document.querySelector(".variables-container");
+
+    if (!variablesContainer) {
+    // Create a new variables container
+    variablesContainer = document.createElement("div");
+    variablesContainer.classList.add("variables-container");
+    document.body.appendChild(variablesContainer);
+    }
+
+    // Clear the existing content of the variables container
+    variablesContainer.innerHTML = "";
+
+    // Iterate over the variables object and create HTML elements to display each variable
+    for (const variable in variables) {
+    const variableValue = variables[variable];
+
+    // Create a container for each variable
+    const variableContainer = document.createElement("div");
+    variableContainer.classList.add("variable-container");
+    variableContainer.innerHTML = `<span class="variable-name">${variable}</span> : <span class="variable-value">${variableValue}</span>`;
+
+    // Add an event listener to each variable container
+    variableContainer.addEventListener("click", () => {
+        // Retrieve the clicked variable value
+        const clickedValue = variableValue;
+
+        // Append the clicked value to the output operation element
+        output_operation_element.innerHTML += clickedValue;
+    });
+
+    // Append the variable container to the variables container
+    variablesContainer.appendChild(variableContainer);
+    }
+}
+// Call the showVariables function with the "editable" parameter set to true
+showVariables(true);
 
 //power number getter
 function powerBaseGetter(formula, power_search_result) {
@@ -490,4 +558,17 @@ function inv_trigo(callback, value){ //Inverse trignometric functions
         angle = angle * Math.PI/180;
     }
     return angle;
+}
+
+// radians and degrees
+let RADIAN = true;
+
+const rad_btn = document.getElementById('rad');
+const deg_btn = document.getElementById('deg');
+
+rad_btn.classList.add("active-angle");
+
+function angleToggler(){
+    rad_btn.classList.toggle("active-angle");
+    deg_btn.classList.toggle("active-angle");
 }

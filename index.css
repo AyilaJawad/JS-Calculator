@@ -23,7 +23,26 @@ html {
   height: auto;
   border-radius: 20px 20px 30px 30px;
 }
+.additional-sections {
+    display: flex;
+    justify-content: space-between;
+    width: 600px;
+    margin-top: 20px;
+}
 
+.history-container {
+    background-color: #e0e0e0;
+    width: 40%;
+    padding: 10px;
+    border-radius: 20px;
+}
+
+.variables-container {
+    background-color: #e0e0e0;
+    width: 40%;
+    padding: 10px;
+    border-radius: 20px;
+}
 .output{
     width: 100%;;
 }   
